@@ -1,0 +1,5 @@
+pydantic
+tracardi_plugin_sdk
+pusher_push_notifications
+aiohttp
+tracardi
