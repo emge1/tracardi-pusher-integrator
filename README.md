@@ -37,45 +37,45 @@ Example #1 - sending to interests:
 
 ```json
 init={
-  "instance_id": 'your_instance_id',
-  "secret_key": 'your_secret_key',
-  "interests": ['hello'],
+  "instance_id": "your_instance_id",
+  "secret_key": "your_secret_key",
+  "interests": ["hello"],
   "user_ids": None,
   "publish_body": {
-    'apns': {
-      'aps': {
-        'alert': {
-          'title': 'Hello',
-          'body': 'Hello world'
+    "apns": {
+      "aps": {
+        "alert": {
+          "title": "Hello",
+          "body": "Hello world"
         },
-        'data': {
-          'some': 'of',
-          'your': 'data'
+        "data": {
+          "some": "of",
+          "your": "data"
         }
       }
     },   
-    'fcm': {
-      'notification': {
-        'title': 'Hello',
-        'body': 'Hello world'
+    "fcm": {
+      "notification": {
+        "title": "Hello",
+        "body": "Hello world"
       },
-      'data': {
-        'some': 'of',
-        'your': 'data'
+      "data": {
+        "some": "of",
+        "your": "data"
       }
     },
-    'web': {
-      'time_to_live': 10000,
-      'notification': {
-        'title': 'Hello',
-        'body': 'Hello world',
-        'icon': 'https://example.com/icon.png',
-        'deep_link': "https://example.com/messages?message_id=1111",
-        'hide_notification_if_site_has_focus': False
+    "web": {
+      "time_to_live": 10000,
+      "notification": {
+        "title": "Hello",
+        "body": "Hello world",
+        "icon": "https://example.com/icon.png",
+        "deep_link": "https://example.com/messages?message_id=1111",
+        "hide_notification_if_site_has_focus": False
       },
-      'data': {
-        'some': 'of',
-        'your': 'data'
+      "data": {
+        "some": "of",
+        "your": "data"
       }
     }
   }
@@ -86,45 +86,45 @@ Example #12 - sending to users:
 
 ```json
 init={
-  "instance_id": 'your_instance_id',
-  "secret_key": 'your_secret_key',
+  "instance_id": "your_instance_id",
+  "secret_key": "your_secret_key",
   "interests": None,
-  "user_ids": ['user_id_1', 'user_id_2', 'user_id_3'],
+  "user_ids": ["user_id_1", "user_id_2", "user_id_3"],
   "publish_body": {
-    'apns': {
-      'aps': {
-        'alert': {
-          'title': 'Hello',
-          'body': 'Hello world'
+    "apns": {
+      "aps": {
+        "alert": {
+          "title": "Hello",
+          "body": "Hello world"
         },
-        'data': {
-          'some': 'of',
-          'your': 'data'
+        "data": {
+          "some": "of",
+          "your": "data"
         }
       }
     },   
-    'fcm': {
-      'notification': {
-        'title': 'Hello',
-        'body': 'Hello world'
+    "fcm": {
+      "notification": {
+        "title": "Hello",
+        "body": "Hello world"
       },
-      'data': {
-        'some': 'of',
-        'your': 'data'
+      "data": {
+        "some": "of",
+        "your": "data"
       }
     },
-    'web': {
-      'time_to_live': 10000,
-      'notification': {
-        'title': 'Hello',
-        'body': 'Hello world',
-        'icon': 'https://example.com/icon.png',
-        'deep_link': "https://example.com/messages?message_id=1111",
-        'hide_notification_if_site_has_focus': False
+    "web": {
+      "time_to_live": 10000,
+      "notification": {
+        "title": "Hello",
+        "body": "Hello world",
+        "icon": "https://example.com/icon.png",
+        "deep_link": "https://example.com/messages?message_id=1111",
+        "hide_notification_if_site_has_focus": False
       },
-      'data': {
-        'some': 'of',
-        'your': 'data'
+      "data": {
+        "some": "of",
+        "your": "data"
       }
     }
   }
