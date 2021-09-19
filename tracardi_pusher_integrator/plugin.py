@@ -17,12 +17,52 @@ class PusherIntegratorAction(ActionRunner):
             beams_client = PushNotifications(instance_id=self.client.instance_id,
                                              secret_key=self.client.secret_key)
 
-            if 1 <= len(self.config.interests) <= 100:
+            if self.config.interests is not None and self.config.user_ids is not None:
+                raise ValueError("You can send only to interests or to individual users at the same time")
+
+            if 1 <= len(self.config.interests) <= 100 or self.config.interests is not None:
                 raise ValueError("List of interests must be in range from 1 to 100")
 
-            response = beams_client.publish_to_interests(
-                interests=[self.config.interests],
-                publish_body = {
+            if 1 <= len(self.config.user_ids) <= 100 or self.config.user_ids is not None:
+                raise ValueError("List of users must be in range from 1 to 100")
+
+            if self.config.interests is not None:
+                response = beams_client.publish_to_interests(
+                    'interests' = [self.config.interests],
+                    'publish_body' = {
+                        'apns': {
+                            'aps': {
+                                'alert': {
+                                    'title': self.config.title,
+                                    'body': self.config.body,
+                                },
+                            },
+                            'data': self.config.data,
+                        },
+                        'fcm': {
+                            'notification': {
+                                'title': self.config.title,
+                                'body': self.config.body,
+                            },
+                            'data': self.config.data,
+                        },
+                        'web': {
+                            'time_to_live': self.config.time_to_live,
+                            'notification': {
+                                'title': self.config.title,
+                                'body': self.config.body,
+                                'icon': self.config.icon,
+                                'deep_link': self.config.deep_link,
+                                'hide_notification_if_site_has_focus': self.config.hide_notification_if_site_has_focus,
+                            },
+                            'data': self.config.data,
+                        }
+                    )
+
+            if self.config.user_ids is not None:
+                response = beams_client.publish_to_users(
+                    'user_ids' = [self.config.interests],
+                    'publish_body' = {
                     'apns': {
                         'aps': {
                             'alert': {
@@ -69,7 +109,8 @@ def register() -> Plugin:
             outputs=["response", "error"],
             init={"instance_id": None,
                   "secret_key": None,
-                  "user_ids": [None],
+                  "interests": None,
+                  "user_ids": None,
                       "publish_body": {
                         'apns': {
                           'aps': {
@@ -101,7 +142,7 @@ def register() -> Plugin:
                         },
                       },
 
-            version="0.1.2",
+            version="0.1.0",
             author="Marcin Gaca",
             license="MIT",
             manual="pusher_integrator_action",
