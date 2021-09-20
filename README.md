@@ -2,7 +2,7 @@
 
 This code can be run within Tracardi workflow.
 
-# Firebase connector actione
+# Pusher integrator action
 
 The purpose of this plugin is to push notifications via Pusher Beams.
 
