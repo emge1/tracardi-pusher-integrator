@@ -20,10 +20,10 @@ class PusherIntegratorAction(ActionRunner):
             if self.config.interests is not None and self.config.user_ids is not None:
                 raise ValueError("You can send only to interests or to individual users at the same time")
 
-            if 1 <= len(self.config.interests) <= 100 or self.config.interests is not None:
+            if (1 <= len(self.config.interests) <= 100) == False or self.config.interests is not None:
                 raise ValueError("List of interests must be in range from 1 to 100")
 
-            if 1 <= len(self.config.user_ids) <= 100 or self.config.user_ids is not None:
+            if (1 <= len(self.config.user_ids) <= 100) == False or self.config.user_ids is not None:
                 raise ValueError("List of users must be in range from 1 to 100")
 
             if self.config.interests is not None:
