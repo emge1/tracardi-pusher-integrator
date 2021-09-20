@@ -20,16 +20,18 @@ class PusherIntegratorAction(ActionRunner):
             if self.config.interests is not None and self.config.user_ids is not None:
                 raise ValueError("You can send only to interests or to individual users at the same time")
 
-            if (1 <= len(self.config.interests) <= 100) == False or self.config.interests is not None:
-                raise ValueError("List of interests must be in range from 1 to 100")
+            if self.config.user_ids is None:
+                if not (1 <= len(self.config.interests) <= 100):
+                    raise ValueError("List of interests must be in range from 1 to 100")
 
-            if (1 <= len(self.config.user_ids) <= 100) == False or self.config.user_ids is not None:
-                raise ValueError("List of users must be in range from 1 to 100")
+            elif self.config.interests is None:
+                if not (1 <= len(self.config.user_ids) <= 100):
+                    raise ValueError("List of users must be in range from 1 to 100")
 
             if self.config.interests is not None:
                 response = beams_client.publish_to_interests(
-                    'interests' = [self.config.interests],
-                    'publish_body' = {
+                    interests=[self.config.interests],
+                    publish_body={
                         'apns': {
                             'aps': {
                                 'alert': {
@@ -57,12 +59,13 @@ class PusherIntegratorAction(ActionRunner):
                             },
                             'data': self.config.data,
                         }
-                    )
+                    }
+                )
 
             if self.config.user_ids is not None:
                 response = beams_client.publish_to_users(
-                    'user_ids' = [self.config.interests],
-                    'publish_body' = {
+                    user_ids=[self.config.user_ids],
+                    publish_body={
                     'apns': {
                         'aps': {
                             'alert': {
@@ -90,13 +93,14 @@ class PusherIntegratorAction(ActionRunner):
                         },
                         'data': self.config.data,
                     }
-                )
+                }
+            )
 
             return Result(port="response", value=response), Result(port="error", value=None)
 
 
         except ClientConnectorError as e:
-        return Result(port="response", value=None), Result(port="error", value=str(e))
+            return Result(port="response", value=None), Result(port="error", value=str(e))
 
 
 def register() -> Plugin:

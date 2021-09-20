@@ -37,7 +37,7 @@ async def main():
                     'data': {},
                 },
             },
-            },
+            }
 
     plugin = PusherIntegratorAction(**init)
 
