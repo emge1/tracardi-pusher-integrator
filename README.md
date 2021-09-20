@@ -82,7 +82,7 @@ init={
 },
 ```
 
-Example #12 - sending to users:
+Example #2 - sending to users:
 
 ```json
 init={
