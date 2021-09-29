@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='tracardi-pusher-integrator',
-    version='0.1.0',
+    version='0.1',
     description='The purpose of this plugin is to connect Tracardi with Pusher Beams.',
     long_description=long_description,
     long_description_content_type="text/markdown",
