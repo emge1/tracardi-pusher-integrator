@@ -25,8 +25,12 @@ class PusherIntegratorAction(ActionRunner):
 
             publish_body = {}
 
-            notification = {'title': self.config.title,
-                            'body': self.config.body}
+            dot = DotAccessor(self.profile, self.session, payload, self.event, self.flow)
+            title = dot[self.config.title]
+            body = dot[self.config.body]
+
+            notification = {'title': title,
+                            'body': body}
 
             if self.platform.android is True:
                 fcm = {'notification': notification}
