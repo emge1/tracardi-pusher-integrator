@@ -3,7 +3,7 @@ from tracardi_plugin_sdk.domain.register import Plugin, Spec, MetaData
 from tracardi_plugin_sdk.domain.result import Result
 
 from aiohttp import ClientConnectorError
-from tracardi_pusher_integrator.model.configuration import PusherClient, PusherConfiguration, \
+from tracardi_pusher_integrator.model.configuration import PusherAuthentication, PusherConfiguration, \
     PusherPlatform
 from pusher_push_notifications import PushNotifications
 
@@ -12,42 +12,27 @@ class PusherIntegratorAction(ActionRunner):
 
     def __init__(self, **kwargs):
         self.config = PusherConfiguration(**kwargs)
-        self.client = PusherClient(**kwargs)
+        self.auth = PusherAuthentication(**kwargs)
         self.platform = PusherPlatform(**kwargs)
 
     async def run(self, payload):
         try:
-            beams_client = PushNotifications(instance_id=self.client.instance_id,
-                                             secret_key=self.client.secret_key)
+            beams_client = PushNotifications(instance_id=self.auth.instance_id,
+                                             secret_key=self.auth.secret_key)
 
-            ''' trzeba wypełnić przynajmniej pole subskrybentów lub użytkowników, adresatów
-             powiadomienia, jak nie, to bład'''
             if self.config.interests is not None and self.config.user_ids is not None:
                 raise ValueError("You can send only to interests or to individual users at the same time")
 
-            '''gole publish body na początku. ogólnie program ma sprawdzać, czy przy jakimś polu
-            jest coś napisanego w init. zależnie od spełnienia napisanych warunków, program
-            dołacza to do publish body'''
             publish_body = {}
 
-            '''notification - przyda się do androida i webu'''
             notification = {'title': self.config.title,
                             'body': self.config.body}
 
-            '''android - jak użytkownik dał android jako True, to dołączenie do publish body
-            jak jeszcze wypełnił data, to dołączenie danych do tego powiadomienia'''
             if self.platform.android is True:
-                fcm = {}
-                fcm.update({'notification': notification})
+                fcm = {'notification': notification}
                 if self.config.data is not None:
                     fcm.update({'data': self.config.data})
                 publish_body.update({'fcm': notification})
-
-
-            '''apple - zdefiniowanie alertu, potem jak użytkownik zaznaczył pole ios w init,
-            to dołącza do publish body. jak jeszcze jest wypełnione pole data, to do alertu
-            są dołączane też dane'''
-
 
             if self.platform.ios is True:
                 alert = {'title': self.config.title,
@@ -58,10 +43,7 @@ class PusherIntegratorAction(ActionRunner):
                     apns.update({'data': self.config.data})
                 publish_body.update({'apns': alert})
 
-
-            '''web - tutaj więcej, bo więcej parametrów'''
-            if self.platform.web is not None:   #jest sporo do sprawdzenia, więc aby oszczędzić czas
-                # uznałem, że tak będzie oszczędniej
+            if self.platform.web is not None:
                 if self.config.icon is not None:
                     notification.update({'icon': self.config.icon})
                     print(notification)
@@ -74,7 +56,7 @@ class PusherIntegratorAction(ActionRunner):
                 web = {}
                 if self.config.time_to_live is not None:
                     web.update({'time_to_live': self.config.time_to_live,
-                           'notification': notification})
+                                'notification': notification})
 
                 if self.config.data is not None:
                     web.update({'data': self.config.data})
@@ -82,24 +64,20 @@ class PusherIntegratorAction(ActionRunner):
                 if self.platform.web is True:
                     publish_body.update({'web': web})
 
-            print(publish_body)
-
-
-            ''' dwie wersje - albo wysłanie do subskrybentów, albo do 
-            konkretnych użytkowników. w obu przypadkach ta sama funkcja, tylko jeden 
-            parametr inny'''
             if self.config.interests is not None:
                 response = beams_client.publish_to_interests(
                     interests=[x for x in self.config.interests],
                     publish_body=publish_body)
 
-            if self.config.user_ids is not None:
+            elif self.config.user_ids is not None:
                 response = beams_client.publish_to_users(
                     user_ids=[x for x in self.config.user_ids],
                     publish_body=publish_body)
 
-            return Result(port="response", value=response), Result(port="error", value=None)
+            else:
+                raise ValueError("")
 
+            return Result(port="response", value=response), Result(port="error", value=None)
 
         except ClientConnectorError as e:
             return Result(port="response", value=None), Result(port="error", value=str(e))
