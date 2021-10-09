@@ -79,7 +79,7 @@ class PusherIntegratorAction(ActionRunner):
                     publish_body=publish_body)
 
             else:
-                raise ValueError("")
+                raise ValueError("You should choose if you wanto to send notifications to users or to interests")
 
             return Result(port="response", value=response), Result(port="error", value=None)
 
